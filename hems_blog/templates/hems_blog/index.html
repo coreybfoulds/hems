@@ -1,0 +1,394 @@
+{% extends 'hems_blog/base.html' %}
+
+
+{% block header %}
+
+{% endblock header %}
+
+{% block content %}
+<style>
+
+        .bottom_nav{
+                border-top-left-radius:5px; 
+                border-top-right-radius:5px; 
+                padding:0px 5px 0px 5px;
+        }
+        .bottom_nav_div{
+            padding:5px 0px 0px 0px ; 
+            border-top-left-radius:5px; 
+            margin:0px;
+        }
+
+        .scroll-area{
+                background-color:rgba(255,255,255, 0.1);
+                width:100%;
+                padding-bottom:0px;
+                height:755px;
+                margin:0px;
+                overflow:scroll;
+                border-bottom-left-radius:3px;
+                border-top-left-radius:3px;
+
+        }
+        .scroll-area::-webkit-scrollbar {
+                    width: 1em;
+                    height:0px
+        }
+         
+        .scroll-area::-webkit-scrollbar-track {
+                    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                    border-top-right-radius:5px;
+                    border-bottom-right-radius:5px;
+                    border-bottom-left-radius:5px;
+                    border-top-left-radius:5px;
+        }
+         
+        .scroll-area::-webkit-scrollbar-thumb {
+                  background-color: darkgrey;
+                  border-top-right-radius:5px;
+                  border-bottom-left-radius:5px;
+                  border-top-left-radius:5px;
+                  border-bottom-right-radius:5px;
+                  outline: 1px solid slategrey;
+                  border-bottom-left-radius:5px;
+                  border-top-left-radius:5px;
+
+        }
+        .index_row{
+                background-color:rgba(255,255,255, 0.5); 
+                padding-bottom:5px; 
+                padding-top:25px;padding-left:0px;
+                padding-right:5px;
+                margin-left:0px;
+                margin-right:0px; 
+                margin-top:20px;
+
+        }
+        .index_left_col{
+                padding:3px;
+        }
+        .index_right_col{
+                margin-top:8px; 
+                background-color:rgba(255,255,255, 0.5);
+                box-shadow:0px 0px 5px 1px #000;
+                padding:10px 5px 15px 5px;
+        }
+        .about_me{
+                background:rgba(255,255,255, 0.0);
+                padding:5px;
+                box-shadow:0px 0px 5px 1px #000;
+                margin-bottom:10px;
+        }
+        .featured_story{
+                text-align:left;
+                background-color:rgba(255,255,255, 0.5);
+                margin:5px 3px 0px 3px;
+                box-shadow:0px 0px 5px 1px #000;
+                padding:5px 10px 10px 10px;
+        }
+        .index_stories{
+                text-align:left;
+                background-color:rgba(255,255,255, 0.8);
+                margin:5px 3px 0px 2px;
+                box-shadow:0px 0px 5px 1px #000;
+                padding:5px 10px 10px 3px;
+        }
+        .time_panel{
+                text-align:left;
+                background-color:rgba(255,255,255, 0.5);
+                box-shadow:0px 0px 5px 1px #000;
+                padding:5px 10px 10px 10px;
+                border-bottom-right-radius:5px;
+                border-top-right-radius:5px;
+        }
+        .dates {
+                font-size:20px;
+        }
+        h2, h4{
+                color:orangered;
+    
+        }
+        h3{
+                color:orangered;
+                padding-left:20px
+        }
+        img{
+                width:100%;
+        }
+        .aboutMe_img{
+                width:50%;
+        }
+        p{
+                text-align:justify;
+        }
+</style>
+<div class="row index_row">
+        <div class="col-lg-8 col-sm-8 col-xs-12 index_left_col"><!--Left Colomn-->
+        {% for topic in topics|slice:"0:1" %}
+            <div class="container-fluid featured_story">
+                    <h2>Featured Story</h2>
+                    {% if topic.image  %}
+                        <img src=" {{topic.image.url }}" class="img-responsive">
+                    {% else %}
+                        <img src='https://3.bp.blogspot.com/-kmOxnySCeNY/VzYhXl1v4II/AAAAAAABfxg/vh6XSGV4IFwBXcCPr2GfJADJA-tM1LkTgCLcB/s1600/KathrynsReport.jpg' class="img-responsive">
+                    {% endif %}
+
+                    <h2>
+                        {{topic.title}}
+                    </h2>
+                    <p>
+                        {{topic.text|linebreaks|truncatewords:20}}
+                    </p>
+                    <a href="{% url 'hems_blog:topic' topic.id %}">
+                        Read
+                    </a>
+            </div>
+        {% endfor %}
+
+                <!--other stories -->
+
+        {% for topic in topics|slice:"1:4" %}
+            <div class="container-fluid index_stories">
+                    <h4>
+                        {{topic.title}}
+                    </h4>
+                    <p>
+                        {{topic.text|linebreaks|truncatewords:20}}
+                    </p>
+                    <a href="{% url 'hems_blog:topic' topic.id %}">
+                        Read
+                    </a>
+            </div>
+        {% empty %}
+            <ul>	
+                <li>
+                    There are No stories currently.
+                 </li>
+             </ul>
+        {% endfor %}
+        </div><!-- END of left colomn -->
+        <div class="col-lg-4 col-sm-4 col-xs-12 index_right_col"><!--Right Col-->
+            <div class="panel about_me">
+                    <h3>
+                            About Me
+                    </h3>
+                    <img class='img-responsive aboutMe_img' src="https://4.bp.blogspot.com/-BUPvhLmIuRQ/Vs8dPf3jsFI/AAAAAAAAMOA/GlwyOtTIm2U/s400/subshot.jpg">
+            </div>
+            <div class="scroll-area time_panel">
+                    <h3>
+                            Time Travel
+                    </h3>
+
+                    <ul class="dates">
+                        <li>
+                                <p><a href="" >2017</a></p>
+                        </li>
+                            <ul>
+                                <li><p><a href=""  >Dec</a></p></li>
+                                <li><p><a href=""  >Nov</a></p></li>
+                                <li><p><a href=""  >Oct</a></p></li>
+                                <li><p><a href=""  >Sep</a></p></li>
+                                <li><p><a href=""  >Aug</a></p></li>
+                                <li><p><a href=""  >Jul</a></p></li>
+                                <li><p><a href=""  >Jun</a></p></li>
+                                <li><p><a href=""  >May</a></p></li>
+                                <li><p><a href=""  >Apr</a></p></li>
+                                <li><p><a href=""  >Mar</a></p></li>
+                                <li><p><a href=""  >Feb</a></p></li>
+                                <li><p><a href=""  >Jan</a></p></li>
+                            </ul>
+                        <li>
+                                <p><a href=""  >2016</a></p>
+                        </li>
+                            <ul>
+                                <li><p><a href=""  >Dec</a></p></li>
+                                <li><p><a href=""  >Nov</a></p></li>
+                                <li><p><a href=""  >Oct</a></p></li>
+                                <li><p><a href=""  >Sep</a></p></li>
+                                <li><p><a href=""  >Aug</a></p></li>
+                                <li><p><a href=""  >Jul</a></p></li>
+                                <li><p><a href=""  >Jun</a></p></li>
+                                <li><p><a href=""  >May</a></p></li>
+                                <li><p><a href=""  >Apr</a></p></li>
+                                <li><p><a href=""  >Mar</a></p></li>
+                                <li><p><a href=""  >Feb</a></p></li>
+                                <li><p><a href=""  >Jan</a></p></li>
+                            </ul>
+                        <li>
+                                <p><a href=""  >2015</a></p>
+                        </li>
+                            <ul>
+                                <li><p><a href=""  >Dec</a></p></li>
+                                <li><p><a href=""  >Nov</a></p></li>
+                                <li><p><a href=""  >Oct</a></p></li>
+                                <li><p><a href=""  >Sep</a></p></li>
+                                <li><p><a href=""  >Aug</a></p></li>
+                                <li><p><a href=""  >Jul</a></p></li>
+                                <li><p><a href=""  >Jun</a></p></li>
+                                <li><p><a href=""  >May</a></p></li>
+                                <li><p><a href=""  >Apr</a></p></li>
+                                <li><p><a href=""  >Mar</a></p></li>
+                                <li><p><a href=""  >Feb</a></p></li>
+                                <li><p><a href=""  >Jan</a></p></li>
+                            </ul>
+                        <li>
+                                <p><a href=""  >2014</a></p>
+                        </li>
+                            <ul>
+                                <li><p><a href=""  >Dec</a></p></li>
+                                <li><p><a href=""  >Nov</a></p></li>
+                                <li><p><a href=""  >Oct</a></p></li>
+                                <li><p><a href=""  >Sep</a></p></li>
+                                <li><p><a href=""  >Aug</a></p></li>
+                                <li><p><a href=""  >Jul</a></p></li>
+                                <li><p><a href=""  >Jun</a></p></li>
+                                <li><p><a href=""  >May</a></p></li>
+                                <li><p><a href=""  >Apr</a></p></li>
+                                <li><p><a href=""  >Mar</a></p></li>
+                                <li><p><a href=""  >Feb</a></p></li>
+                                <li><p><a href=""  >Jan</a></p></li>
+                            </ul>
+                        <li>
+                                <p><a href=""  >2013</a></p>
+                        </li>
+                            <ul>
+                                <li><p><a href=""  >Dec</a></p></li>
+                                <li><p><a href=""  >Nov</a></p></li>
+                                <li><p><a href=""  >Oct</a></p></li>
+                                <li><p><a href=""  >Sep</a></p></li>
+                                <li><p><a href=""  >Aug</a></p></li>
+                                <li><p><a href=""  >Jul</a></p></li>
+                                <li><p><a href=""  >Jun</a></p></li>
+                                <li><p><a href=""  >May</a></p></li>
+                                <li><p><a href=""  >Apr</a></p></li>
+                                <li><p><a href=""  >Mar</a></p></li>
+                                <li><p><a href=""  >Feb</a></p></li>
+                                <li><p><a href=""  >Jan</a></p></li>
+                            </ul>
+                        <li>
+                                <p><a href=""  >2012</a></p>
+                        </li>
+                            <ul>
+                                <li><p><a href="" >Dec</a></p></li>
+                                <li><p><a href=""  >Nov</a></p></li>
+                                <li><p><a href=""  >Oct</a></p></li>
+                                <li><p><a href=""  >Sep</a></p></li>
+                                <li><p><a href=""  >Aug</a></p></li>
+                                <li><p><a href=""  >Jul</a></p></li>
+                                <li><p><a href=""  >Jun</a></p></li>
+                                <li><p><a href=""  >May</a></p></li>
+                                <li><p><a href=""  >Apr</a></p></li>
+                                <li><p><a href=""  >Mar</a></p></li>
+                                <li><p><a href=""  >Feb</a></p></li>
+                                <li><p><a href=""  >Jan</a></p></li>
+                            </ul>
+                        <li>
+                                <p><a href=""  >2011</a></p>
+                        </li>
+                            <ul>
+                                <li><p><a href=""  >Dec</a></p></li>
+                                <li><p><a href=""  >Nov</a></p></li>
+                                <li><p><a href=""  >Oct</a></p></li>
+                                <li><p><a href=""  >Sep</a></p></li>
+                                <li><p><a href=""  >Aug</a></p></li>
+                                <li><p><a href=""  >Jul</a></p></li>
+                                <li><p><a href=""  >Jun</a></p></li>
+                                <li><p><a href=""  >May</a></p></li>
+                                <li><p><a href=""  >Apr</a></p></li>
+                                <li><p><a href=""  >Mar</a></p></li>
+                                <li><p><a href=""  >Feb</a></p></li>
+                                <li><p><a href=""  >Jan</a></p></li>
+                            </ul>
+                        <li>
+                                <p><a href=""  >2010</a></p>
+                        </li>
+                            <ul>
+                                <li><p><a href=""  >Dec</a></p></li>
+                                <li><p><a href=""  >Nov</a></p></li>
+                                <li><p><a href=""  >Oct</a></p></li>
+                                <li><p><a href=""  >Sep</a></p></li>
+                                <li><p><a href=""  >Aug</a></p></li>
+                                <li><p><a href=""  >Jul</a></p></li>
+                                <li><p><a href=""  >Jun</a></p></li>
+                                <li><p><a href=""  >May</a></p></li>
+                                <li><p><a href=""  >Apr</a></p></li>
+                                <li><p><a href=""  >Mar</a></p></li>
+                                <li><p><a href=""  >Feb</a></p></li>
+                                <li><p><a href=""  >Jan</a></p></li>
+                            </ul>
+                        <li>
+                                <p><a href=""  >2009</a></p>
+                        </li>
+                            <ul>
+                                <li><p><a href=""  >Dec</a></p></li>
+                                <li><p><a href=""  >Nov</a></p></li>
+                                <li><p><a href=""  >Oct</a></p></li>
+                                <li><p><a href=""  >Sep</a></p></li>
+                                <li><p><a href=""  >Aug</a></p></li>
+                                <li><p><a href=""  >Jul</a></p></li>
+                                <li><p><a href=""  >Jun</a></p></li>
+                                <li><p><a href=""  >May</a></p></li>
+                                <li><p><a href=""  >Apr</a></p></li>
+                                <li><p><a href=""  >Mar</a></p></li>
+                                <li><p><a href=""  >Feb</a></p></li>
+                                <li><p><a href=""  >Jan</a></p></li>
+                            </ul>
+                        <li>
+                                <p><a href=""  >2008</a></p>
+                        </li>
+                            <ul>
+                                <li><p><a href=""  >Dec</a></p></li>
+                                <li><p><a href=""  >Nov</a></p></li>
+                                <li><p><a href=""  >Oct</a></p></li>
+                                <li><p><a href=""  >Sep</a></p></li>
+                                <li><p><a href=""  >Aug</a></p></li>
+                                <li><p><a href=""  >Jul</a></p></li>
+                                <li><p><a href=""  >Jun</a></p></li>
+                                <li><p><a href=""  >May</a></p></li>
+                                <li><p><a href=""  >Apr</a></p></li>
+                                <li><p><a href=""  >Mar</a></p></li>
+                                <li><p><a href=""  >Feb</a></p></li>
+                                <li><p><a href=""  >Jan</a></p></li>
+                            </ul>
+                    </ul>
+            </div> 
+        </div><!--END of Right Colomn-->
+</div>
+<!--END OF ROW-->       
+
+<!--Sep-------------------------------------->
+
+<!--Bottom Nav-->
+<div  class="bottom_nav_div">    
+    <nav class="navbar navbar-default navbar-absolute-bottom bottom_nav" >
+        <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" 
+                data-toggle="collapse" data-target="#navbar2" 
+                aria-expanded="false" aria-controls="navbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{% url 'hems_blog:topics' %}">
+                      More 
+                </a>
+        </div>
+        <div id="navbar2" class="navbar-collapse collapse">      
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="https://www.facebook.com/search/top/?q=daniel%20foulds%20helicopterems" target="_blank">
+                            Hems Facebook
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                        <a href="https://plus.google.com/+DanielFouldsamrmtrainingsolutions"target="_blank"  >
+                                Google+
+                        </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div><!--END Bottom Nav-->
+
+{% endblock content %}

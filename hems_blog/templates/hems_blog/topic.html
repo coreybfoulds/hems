@@ -1,0 +1,90 @@
+{% extends 'hems_blog/base.html' %}
+
+{% block header %}
+
+
+
+{% endblock header %}
+
+
+{% block content %}
+<div class="panel-body" style="padding-top:40px; padding-bottom:20px;;padding-left:10px;                           
+                   padding-right:10px;
+                   margin-top:0px;background-color:rgba(255,255,255, 0.9);
+                   max-width:900px;">
+	
+			{% if topic.video != "0" %}
+				<div class="embed-responsive embed-responsive-16by9">
+					<iframe  frameborder=0 allowfullscreen src="{{topic.video}}">
+					</iframe>
+				</div>
+				<hr />
+			{% endif %}
+			
+			<h2 style="color:orangered; font-weight:bold;">
+				{{topic.title}}
+			</h2>
+
+			{% if topic.image %}
+				<div style="float:right;margin-right:40px;
+					margin-left:20px;padding-bottom:20px; 
+					padding-top:20px;">
+					
+					<img src='{{topic.image.url}}' class='img-responsive' 
+					style="border:solid 1px white;"/>
+				</div>
+			{% endif %}
+
+			<p style="text-align:justify;margin:0px 30px 30px 30px;">
+				{{topic.text|linebreaks}}
+			</p>
+			<hr />
+			<p>
+				<a href="{% url 'hems_blog:new_entry' topic.id %}" >
+					comment
+				</a>
+				<a href="{% url 'hems_blog:new_entry' topic.id %}" style="float:right">
+					{% for entry in entries %}
+						{% if forloop.first %}
+							{{forloop.revcounter}} Commnets
+						{% endif %}
+					{% endfor %}
+				</a>
+			</p>
+
+		{% for entry in entries|slice:":1" %}
+		<div style="padding-bottom:0px;" >
+			<div class="panel-body" style="box-shadow:0px 0px 1px 1px #FFF;
+						background-color:rgba(255,255,255 0.5);
+						padding:0px 0px 5px 10px; 
+						border-bottom: solid 1px #FFF; 
+						margin:0;
+                        width:100%;">
+				<h3>
+					<small>
+						<a style="color:black;">
+							<b>
+								{{entry.owner}}
+							</b>
+						</a>
+						@{{ entry.date_added|date:'H:i, M d'}}
+					</small>
+				</h3>
+				<p>
+					<a style="text-decoration:none; color:black;">
+						{{entry.text|linebreaks}}
+					</a>
+				</p>
+				{% if user == entry.owner %}
+				<a href="{% url 'hems_blog:edit_entry' entry.id %}">
+					edit comment
+				</a>
+			
+				{% endif %}	
+			</div>
+			{% empty %}
+			Be the first to make a comment.
+		</div>
+		{% endfor %}
+	</div>
+{% endblock content %}

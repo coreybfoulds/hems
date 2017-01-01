@@ -1,0 +1,461 @@
+<head>
+<!--[if lt IE 9]>
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<![endif]-->
+<base href="https://www.aviationweather.gov/" /><title>AWC - Aviation Weather Center</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+<meta http-equiv="content-type" content="text/html; charset=utf-8" >
+<meta name="DC.language" content="en-us" scheme="DCTERMS.RFC1766" >
+<meta name="description" content="Aviation Weather Center Homepage provides comprehensive user-friendly aviation weather Text products and graphics." >
+<meta name="keywords" content="aviation, weather, icing, turbulence, convection, pirep, metar, taf, airmet, sigmet, satellite, radar, surface, wind, temperature, aloft, airplane, NEXRAD, GOES, WSR-88D, precipitation, rain, snow, sleet, thunderstorm, en-route, prognosis, chart" >
+<meta name="DC.title" content="AWC - Aviation Weather Center" >
+<meta name="DC.description" content="Aviation Weather Center Home Page ... Front Page" >
+<meta name="DC.creator" content="NOAA's National Weather Service - Aviation Weather Center Homepage" >
+<meta name="DC.date.created" content="2013-03-15" scheme="ISO8601" >
+<meta name="DC.date.reviewed" content="2013-03-15" scheme="ISO8601" >
+
+<script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="/javascript/hemst.js"></script>
+<script type="text/javascript" src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript" src="/lib/OpenLayers-2.13.1/OpenLayers.js"></script>
+<script type="text/javascript" src="/javascript/awc_openlayers.js"></script>
+<link href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/images/favicon.ico" rel="shortcut icon" >
+<link href="/images/noaa_logo.png" rel="apple-touch-icon" >
+<link href="/css/layout.css" media="" rel="stylesheet" type="text/css" >
+
+</head>
+<body onload="init()" onunload="unload(map)">
+<!-- AWC Top Navigation Menu -->
+<!-- Main content -->
+<div id="awc_main">
+<div id="awc_main_content">
+
+
+<style>
+.olLayerGrid .olTileImage {
+   -webkit-transition: none;
+   -moz-transition: none;
+   -o-transition: all 0 none;
+   transition: none;
+
+
+}
+</style>
+<div id="map_wrap">
+<div id="plot" style="position: relative; width:804px; height:523px; background: white; clear: both">
+<div id="app_menu">
+<ul>
+<li id="app_link" aria-haspopup="true" onClick="" style="margin-left: 5px">Weather
+  <ul>
+  <li id="app_link"> <input id="sat" type="checkbox" name="Sat" value="Sat" onClick="toggleSat()"/>Satellite</li>
+  <li id="app_link" style="border-bottom: 1px solid #008"><input id="radar" type="checkbox" name="Radar" value="Radar" checked="checked" onClick="toggleRadar()"/>Radar</li>
+  <li id="app_link" style="border: 0">
+  Weather layer:<br/>
+  <input id="none" type="radio" name="weather" value="None" onClick="changeWeather('none')"/>None<br/>
+  <input id="wxfltcat" type="radio" name="weather" value="Flight Category" checked="checked" onClick="changeWeather('fltcat')"/>Flight Category<br/>
+  <input id="wxceil" type="radio" name="weather" value="Ceiling" onClick="changeWeather('ceil')"/>Ceiling<br/>
+  <input id="wxvis" type="radio" name="weather" value="Visibility Category" onClick="changeWeather('vis')"/>Visibility<br/>
+  </li>
+  <li id="app_link" style="border: 0"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">Icing Severity &gt;&gt;</div>
+    <ul>
+    <li id="app_link" style="padding: 5px 0 5px 4px"><input id="icsev10" type="radio" name="weather" value="icsev10" onClick="changeWeather('icsev10')"/>@1000' AGL<br/>
+    <input id="icsev20" type="radio" name="weather" value="icsev20" onClick="changeWeather('icsev20')"/>@2000' AGL<br/>
+    <input id="icsev30" type="radio" name="weather" value="icsev30" onClick="changeWeather('icsev30')"/>@3000' AGL<br/>
+    <input id="icsev40" type="radio" name="weather" value="icsev40" onClick="changeWeather('icsev40')"/>@4000' AGL<br/>
+    <input id="icsev50" type="radio" name="weather" value="icsev50" onClick="changeWeather('icsev50')"/>@5000' AGL</li>
+    </ul>
+  </li>
+  <li id="app_link" style="border: 0"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">Icing Probability &gt;&gt;</div>
+    <ul>
+    <li id="app_link" style="padding: 5px 0 5px 4px"><input id="icprob10" type="radio" name="weather" value="icprob10" onClick="changeWeather('icprob10')"/>@1000' AGL<br/>
+    <input id="icprob20" type="radio" name="weather" value="icprob20" onClick="changeWeather('icprob20')"/>@2000' AGL<br/>
+    <input id="icprob30" type="radio" name="weather" value="icprob30" onClick="changeWeather('icprob30')"/>@3000' AGL<br/>
+    <input id="icprob40" type="radio" name="weather" value="icprob40" onClick="changeWeather('icprob40')"/>@4000' AGL<br/>
+    <input id="icprob50" type="radio" name="weather" value="icprob50" onClick="changeWeather('icprob50')"/>@5000' AGL</li>
+    </ul>
+  </li>
+  <li id="app_link" style="border: 0"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">Temperature &gt;&gt;</div>
+    <ul>
+    <li id="app_link" style="padding: 5px 0 5px 4px"><input id="temp10" type="radio" name="weather" value="temp10" onClick="changeWeather('temp10')"/>@1000' AGL<br/>
+    <input id="temp20" type="radio" name="weather" value="temp20" onClick="changeWeather('temp20')"/>@2000' AGL<br/>
+    <input id="temp30" type="radio" name="weather" value="temp30" onClick="changeWeather('temp30')"/>@3000' AGL<br/>
+    <input id="temp40" type="radio" name="weather" value="temp40" onClick="changeWeather('temp40')"/>@4000' AGL<br/>
+    <input id="temp50" type="radio" name="weather" value="temp50" onClick="changeWeather('temp50')"/>@5000' AGL</li>
+    </ul>
+  </li>
+  <li id="app_link" style="border: 0"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">Rel Humidity &gt;&gt;</div>
+    <ul>
+    <li id="app_link" style="padding: 5px 0 5px 4px"><input id="rh10" type="radio" name="weather" value="rh10" onClick="changeWeather('rh10')"/>@1000' AGL<br/>
+    <input id="rh20" type="radio" name="weather" value="rh20" onClick="changeWeather('rh20')"/>@2000' AGL<br/>
+    <input id="rh30" type="radio" name="weather" value="rh30" onClick="changeWeather('rh30')"/>@3000' AGL<br/>
+    <input id="rh40" type="radio" name="weather" value="rh40" onClick="changeWeather('rh40')"/>@4000' AGL<br/>
+    <input id="rh50" type="radio" name="weather" value="rh50" onClick="changeWeather('rh50')"/>@5000' AGL</li>
+    </ul>
+  </li>
+  <li id="app_link" style="border: 0"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">Wind speed &gt;&gt;</div>
+    <ul>
+    <li id="app_link" style="padding: 5px 0 5px 4px"><input id="wspd10" type="radio" name="weather" value="wspd10" onClick="changeWeather('wspd10')"/>@1000' AGL<br/>
+    <input id="wspd20" type="radio" name="weather" value="wspd20" onClick="changeWeather('wspd20')"/>@2000' AGL<br/>
+    <input id="wspd30" type="radio" name="weather" value="wspd30" onClick="changeWeather('wspd30')"/>@3000' AGL<br/>
+    <input id="wspd40" type="radio" name="weather" value="wspd40" onClick="changeWeather('wspd40')"/>@4000' AGL<br/>
+    <input id="wspd50" type="radio" name="weather" value="wspd50" onClick="changeWeather('wspd50')"/>@5000' AGL</li>
+    </ul>
+  </li>
+  </ul>
+</li>
+<li id="app_link" aria-haspopup="true" onClick="">Overlays
+  <ul>
+  <li id="app_link"><input type="checkbox" id="metar" name="Met" value="Met" onClick="toggleMetar()"/>METAR/TAF</li>
+  <li id="app_link"><input type="checkbox" id="fltcat" name="FltCat" value="FltCat" checked="checked" onClick="fltcat.layer.setVisibility(fltcat.layer.visibility?false:true)"/>FltCat</li>
+  <li id="app_link"><input type="checkbox" id="pirep" name="Pirep" value="Pirep" onClick="togglePirep()"/>PIREP</li>
+  <li id="app_link"><input type="checkbox" id="sigmet" name="Sigmet" value="Sigmets" onClick="toggleSigmet()"/>SIGMET</li>
+  <li id="app_link"><input type="checkbox" id="gairmet" name="Gairmet" value="Gairmet" onClick="gairmet.layer.setVisibility(gairmet.layer.visibility?false:true)"/>G-AIRMET</li>
+  <li id="app_link"><input type="checkbox" id="cwa" name="Cwa" value="Cwa" onClick="cwa.layer.setVisibility(cwa.layer.visibility?false:true)"/>CWA</li>
+  <li id="app_link"><input type="checkbox" id="hazard" name="Hazard" value="Hazard" onClick="hazard.layer.setVisibility(hazard.layer.visibility?false:true)"/>NWS Hazards</li>
+  <li id="app_link" style="border-bottom: solid 1px #444444"><input type="checkbox" id="windbarb" name="Windbarb" value="Windbarb" onClick="toggleWindbarb()"/>Windbarb</li>
+  <li id="app_link"> <input id="highways" type="checkbox" name="Highways" value="Highways" onClick="toggleHighways()"/>Highways</li>
+  <li id="app_link"> <input id="roads" type="checkbox" name="Roads" value="Roads" onClick="toggleRoads()"/>Roads</li>
+  <li id="app_link"> <input id="counties" type="checkbox" name="Counties" value="Counties" onClick="toggleCounties()"/>Counties</li>
+  <li id="app_link"><input id="jetroutes" type="checkbox" name="Jetroutes" value="Jetroutes" onClick="toggleJetroutes()"/>Top Jetroutes</li>
+  <li id="app_link"> <input id="firs" type="checkbox" name="FIR" value="FIR" onClick="toggleFir()"/>ARTCC Boundaries</li>
+  <li id="app_link"><input id="navaids" type="checkbox" name="Navaids" value="Navaids" onClick="toggleNavAids()"/>Nav Aids</li>
+  <li id="app_link"><input id="airports" type="checkbox" name="Airports" value="Airports" onClick="toggleAirports()"/>Airports</li>
+  <li id="app_link"><input id="runways" type="checkbox" name="Runways" value="Runways" onClick="toggleRunways()"/>Runways</li>
+  </ul>
+</li>
+<li id="app_link" aria-haspopup="true" onClick="">View
+  <ul>
+  <li id="app_link" style="padding: 2px 5px 2px 0"><span id="user1">
+  <div class="popout">User 1 &gt;&gt;</div>
+  <ul style="width: 200px; padding: 5px 0 5px 0">
+  <li id="app_link" style="width: 200px; border: 0">Name: <input id="viewname1" type="text" size="10" name="View" value="">
+  <input id="viewsubmit" type="button" name="ViewSub" value="Save" onClick="saveView(1)">
+  </li>
+  </ul>
+  </span></li>
+  <li id="app_link" style="padding: 2px 5px 2px 0"><span id="user2">
+  <div class="popout">User 2 &gt;&gt;</div>
+  <ul style="width: 200px; padding: 5px 0 5px 0">
+  <li id="app_link" style="width: 200px; border: 0">Name: <input id="viewname2" type="text" size="10" name="View" value="">
+  <input id="viewsubmit" type="button" name="ViewSub" value="Save" onClick="saveView(2)">
+  </li>
+  </ul>
+  </span></li>
+  <li id="app_link" style="padding: 2px 5px 2px 0"><span id="user3">
+  <div class="popout">User 3 &gt;&gt;</div>
+  <ul style="width: 200px; padding: 5px 0 5px 0">
+  <li id="app_link" style="width: 200px; border: 0">Name: <input id="viewname3" type="text" size="10" name="View" value="">
+  <input id="viewsubmit" type="button" name="ViewSub" value="Save" onClick="saveView(3)">
+  </li>
+  </ul>
+  </span></li>
+  <li id="app_link" style="padding: 2px 5px 2px 0"><span id="user4">
+  <div class="popout">User 4 &gt;&gt;</div>
+  <ul style="width: 200px; padding: 5px 0 5px 0">
+  <li id="app_link" style="width: 200px; border: 0">Name: <input id="viewname4" type="text" size="10" name="View" value="">
+  <input id="viewsubmit" type="button" name="ViewSub" value="Save" onClick="saveView(4)">
+  </li>
+  </ul></span>
+  </li>
+  <li id="app_link" style="padding: 2px 5px 2px 0"><a href="javascript:recenter(39,-97,4)">CONUS</a></li>
+  <li id="app_link" style="padding: 2px 5px 2px 0"><a href="javascript:recenter(65,-155,4)">Alaska</a></li>
+  <li id="app_link" style="padding: 2px 5px 2px 0"><a href="javascript:recenter(21,-157,6)">Hawaii</a></li>
+  <li id="app_link" style="padding: 2px 5px 2px 2px"><div class="popout">Delete View &gt;&gt;</div>
+    <ul style="width: 160px">
+    <li id="app_link" style="padding: 5px 5px 2px 0"><a href="javascript:resetView(1)"><span id="del1">User 1</span></a></li>
+    <li id="app_link" style="padding: 2px 5px 2px 0"><a href="javascript:resetView(2)"><span id="del2">User 2</span></a></li>
+    <li id="app_link" style="padding: 2px 5px 2px 0"><a href="javascript:resetView(3)"><span id="del3">User 3</span></a></li>
+    <li id="app_link" style="padding: 2px 5px 5px 0"><a href="javascript:resetView(4)"><span id="del4">User 4</span></a></li>
+    </ul>
+  </li>
+  </ul>
+</li>
+<li id="app_link" aria-haspopup="true" onClick="">Configure
+  <ul aria-haspopup="false">
+  <li id="app_link"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">Map &gt;&gt;</div>
+    <ul>
+    <li id="app_link" style="padding: 5px 0 5px 4px">
+    Basemap type:<br/>
+    <input id="terrain" type="radio" name="BaseMap" value="Terrain" checked="checked" onClick="toggleMap('terrain')"/>Terrain<br/>
+    <input id="road" type="radio" name="BaseMap" value="Road" onClick="toggleMap('road')"/>Road<br/>
+    <input id="satellite" type="radio" name="BaseMap" value="Sat" onClick="toggleMap('sat')"/>Satellite<br/>
+    <input id="light" type="radio" name="BaseMap" value="Light" onClick="toggleMap('light')"/>Light<br/>
+    <input id="dark" type="radio" name="BaseMap" value="Dark" onClick="toggleMap('dark')"/>Dark<br/>
+    <input id="simple" type="radio" name="BaseMap" value="Simple" onClick="toggleMap('simple')"/>Simple</li>
+    </ul>
+  </li>
+  <li id="app_link"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">Satellite &gt;&gt;</div>
+    <ul style="width: 250px">
+    <li id="app_link" style="width: 240px; padding-top: 5px">
+    Image type:
+    <select id="satprod" name="satprod" onChange="changeSatellite(this.options[this.selectedIndex].value)">
+      <option value="ir" selected="selected">Infrared</option>
+      <option value="vis">Visible</option>
+      <option value="wv">Water Vapor</option>
+    </select>
+    </li>
+    <li id="app_link" style="width: 240px; padding-bottom: 5px">
+    Opacity:
+    <select id="satop" name="satop" onChange="sat.layer.setOpacity(this.options[this.selectedIndex].value)">
+      <option value=".25">25%</option>
+      <option value=".5" selected="selected">50%</option>
+      <option value=".75">75%</option>
+      <option value="1">100%</option>
+    </select>
+    </li>
+    </ul>
+  </li>
+  <li id="app_link"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">Radar &gt;&gt;</div>
+    <ul style="width: 250px">
+    <li id="app_link" style="width: 240px; padding: 5px 0 5px 4px">
+    Opacity:
+    <select id="radop" name="radop" onChange="setRadarOpacity(this.options[this.selectedIndex].value)">
+      <option value=".25">25%</option>
+      <option value=".5">50%</option>
+      <option value=".75" selected="selected">75%</option>
+      <option value="1">100%</option>
+    </select>
+    </li>
+    </ul>
+  </li>
+  <li id="app_link"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">Weather &gt;&gt;</div>
+    <ul style="width: 250px">
+    <li id="app_link" style="width: 240px; padding: 5px 0 5px 4px">
+    Opacity:
+    <select id="wxop" name="wxop" onChange="weather.setOpacity(this.options[this.selectedIndex].value)">
+      <option value=".25">25%</option>
+      <option value=".5">50%</option>
+      <option value=".75" selected="selected">75%</option>
+      <option value="1">100%</option>
+    </select>
+    </li>
+    </ul>
+  </li>
+  <li id="app_link"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">METAR/TAF &gt;&gt;</div>
+    <ul style="width: 250px">
+    <li id="app_link" style="width: 240px; padding-top: 5px">
+    Parameters visible:
+    <table border="0">
+    <tr>
+    <td><input id="all" type="button" name="All" value="All" onClick="updateMetarPlot('all')"></td>
+    <td><input id="temp" type="checkbox" name="Temp" value="Temp" checked="checked" onClick="updateMetarPlot()">Temp</td>
+    <td><input id="wind" type="checkbox" name="Wind" value="Wind" checked="checked" onClick="updateMetarPlot()">Wind</td>
+    <td><input id="alt" type="checkbox" name="Alt" value="Alt" checked="checked" onClick="updateMetarPlot()">Alt</td>
+    </tr>
+    <tr>
+    <td><input id="vis" type="checkbox" name="Vis" value="Vis" checked="checked" onClick="updateMetarPlot()">Vis</td>
+    <td><input id="wx" type="checkbox" name="Wx" value="Wx" checked="checked" onClick="updateMetarPlot()">Wx</td>
+    <td><input id="cover" type="checkbox" name="Cover" value="Cover" checked="checked" onClick="updateMetarPlot()">Cover</td>
+    <td><input id="ceil" type="checkbox" name="Ceil" value="Ceil" checked="checked" onClick="updateMetarPlot()">Ceil</td>
+    </tr>
+    <tr>
+    <td><input id="none" type="button" name="None" value="None" onClick="updateMetarPlot('none')"></td>
+    <td><input id="dew" type="checkbox" name="Dew" value="Dew" checked="checked" onClick="updateMetarPlot()">Dew</td>
+    <td><input id="wgst" type="checkbox" name="Wgst" value="Wgst" checked="checked" onClick="updateMetarPlot()">Wgst</td>
+    <td><input id="id" type="checkbox" name="Id" value="Id" checked="checked" onClick="updateMetarPlot()">Id</td>
+    </tr>
+    </table></li>
+    <li id="app_link" style="width: 240px">Density:
+    <select id="metdensity" name="metdensity" onchange="changeMetarDensity(this.options[this.selectedIndex].value);">
+      <option value="-1">-1</option>
+      <option value="0" selected="selected">0</option>
+      <option value="1">+1</option>
+      <option value="2">+2</option>
+      <option value="all">All</option>
+    </select>
+    </li>
+    <li id="app_link" style="width: 240px">Scale:
+    <select id="metscale" name="metscale" onchange="changeMetarScale(this.options[this.selectedIndex].value);">
+      <option value="1" selected="selected">1</option>
+      <option value="1.25">1.25</option>
+      <option value="1.5">1.5</option>
+    </select></li>
+    <li id="app_link" style="width: 240px"><input id="metdecoded" type="checkbox" name="Decoded" value="Decoded" onClick="changeMetarDecoded(this)"/>Decoded METAR</li>
+    <li id="app_link" style="width: 240px; padding-bottom: 5px">
+    <input id="mettaf" type="checkbox" name="Taf" value="Taf" onClick="changeMetarTAF(this)"/>Include TAF</li>
+    </ul>
+  </li>
+  <li id="app_link"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">Flight Cat &gt;&gt;</div>
+    <ul style="width: 250px">
+    <li id="app_link" style="width: 240px; padding-top: 5px">
+    Density:
+    <select id="fcdensity" name="fcdensity" onchange="changeFCDensity(this.options[this.selectedIndex].value);">
+      <option value="-1">-1</option>
+      <option value="0">0</option>
+      <option value="1">+1</option>
+      <option value="2">+2</option>
+      <option value="3" selected="selected">+3</option>
+      <option value="all">All</option>
+    </select>
+    </li>
+    <li id="app_link" style="width: 240px">
+    <input id="fcvfr" type="checkbox" name="fcVfr" value="VFR" checked onClick="changeFCVfr(this);"/>Show VFR</li>
+    <li id="app_link" style="width: 240px; padding-bottom: 5px">
+    <input id="fctaf" type="checkbox" name="fcTaf" value="fcTaf" onClick="changeFCTAF(this)"/>Include TAF</li>
+    </ul>
+  </li>
+  <li id="app_link"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">PIREP &gt;&gt;</div>
+    <ul style="width: 250px">
+    <li id="app_link" style="width: 240px; padding-top: 5px">
+    Turbulence:<input id="pirept" type="checkbox" name="PirepT" value="PirepT" checked="checked" onClick="togglePirepTurb(this)"/>
+    Icing:<input id="pirepi" type="checkbox" name="PirepI" value="PirepI" checked="checked" onClick="togglePirepIcing(this)"/>
+    </li>
+    <li id="app_link" style="width: 240px">Level range:<br/>
+    Top: <select id="pireptop" name="pireptop" onChange="setPirepTop(this.options[this.selectedIndex].value)">
+    <option value="undef">Undef</option>
+    <option value="150">15,000</option>
+    <option value="125" selected="selected">12,500</option>
+    <option value="100">10,000</option>
+    <option value="75">7,500</option>
+    <option value="50">5,000</option>
+    <option value="25">2,500</option>
+    </select>
+    Bottom: <select id="pirepbot" name="pirepbot" onChange="setPirepBottom(this.options[this.selectedIndex].value)">
+    <option value="undef" selected="selected">Undef</option>
+    <option value="125">12,500</option>
+    <option value="100">10,000</option>
+    <option value="75">7,500</option>
+    <option value="50">5,000</option>
+    <option value="50">2,500</option>
+    <option value="0">Sfc</option>
+    </select></li>
+    <li id="app_link" style="width: 240px">Age: <select id="pirepage" name="pirepage" onChange="setPirepAge(this.options[this.selectedIndex].value)">
+    <option value=".5">30min</option>
+    <option value="1">1hr</option>
+    <option value="1.5" selected="selected">90min</option>
+    <option value="2">2hr</option>
+    <option value="3">3hr</option>
+    <option value="4">4hr</option>
+    <option value="6">6hr</option>
+    <option value="12">12hr</option>
+    </select></li>
+    <li id="app_link" style="width: 240px">Min intensity: <select id="pirepint" name="pirepint" onChange="setPirepInten(this.options[this.selectedIndex].value)">
+    <option value="all" selected="selected">All</option>
+    <option value="lgt">&gt;=LGT</option>
+    <option value="mod">&gt;=MOD</option>
+    <option value="sev">&gt;=SEV</option>
+    </select></li>
+    <li id="app_link" style="width: 240px; padding-bottom: 5px">Scale:
+    <select id="pirepscale" name="pirepscale" onchange="changePirepScale(this.options[this.selectedIndex].value);">
+      <option value="1" selected="selected">1</option>
+      <option value="1.25">1.25</option>
+      <option value="1.5">1.5</option>
+    </select></li>
+    </ul>
+  </li>
+  <li id="app_link"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">SIGMETs &gt;&gt;</div>
+    <ul style="width: 250px">
+    <li id="app_link" style="width: 240px; padding-top:3px">
+      Types visible:<br/>
+      <table border="0"><tr valign="top"><td width="100">
+      <input type="checkbox" id="sigtrop" name="Conv" value="Conv" checked="checked" onClick="changeSigmetType()"/>Tropical<br/>
+      <input type="checkbox" id="sigconv" name="Conv" value="Conv" checked="checked" onClick="changeSigmetType()"/>Convective<br/>
+      <input type="checkbox" id="sigturb" name="Turb" value="Turb" checked="checked" onClick="changeSigmetType()"/>Turbulence<br/>
+    </td><td>
+      <input type="checkbox" id="sigice" name="Icing" value="Icing" checked="checked" onClick="changeSigmetType()"/>Icing<br/>
+      <input type="checkbox" id="sigifr" name="Icing" value="Icing" checked="checked" onClick="changeSigmetType()"/>IFR<br/>
+      <input type="checkbox" id="sigva" name="Icing" value="Icing" checked="checked" onClick="changeSigmetType()"/>Volc Ash<br/>
+      </td>
+    </tr></table>
+    </li>
+    <li id="app_link" style="width: 240px">
+    Show heights:<input type="checkbox" id="sigh" name="SigH" value="SigH" onClick="toggleSigHeight(this)"/></li>
+    <li id="app_link" style="width: 240px; padding-bottom: 5px">
+    Opacity:
+    <select id="satop" name="satop" onChange="setSigmetOpacity(this.options[this.selectedIndex].value)">
+      <option value="0.">0%</option>
+      <option value=".25">25%</option>
+      <option value=".5" selected="selected">50%</option>
+      <option value=".75">75%</option>
+    </select>
+    </li>
+    </ul>
+  </li>
+  <li id="app_link"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">G-AIRMET &gt;&gt;</div>
+    <ul style="width: 250px">
+    <li id="app_link" style="width: 240px; padding-top:3px">
+      Types visible:<br/>
+      <table border="0"><tr valign="top"><td width="100">
+      <input type="checkbox" id="gturbhi" name="TurbHi" value="TurbHi" checked="checked" onClick="changeGairmetType()"/>Turb Hi<br/>
+      <input type="checkbox" id="gturblo" name="TurbHi" value="TurbLo" checked="checked" onClick="changeGairmetType()"/>Turb Lo<br/>
+      <input type="checkbox" id="gllws" name="LLWS" value="LLWS" checked="checked" onClick="changeGairmetType()"/>LLWS<br/>
+      <input type="checkbox" id="gsfcwind" name="SfcWind" value="SfcWind" checked="checked" onClick="changeGairmetType()"/>Sfc Winds<br/>
+      <input type="button" id="gall" name="AllOn" value="All On" onClick="changeGairmetType('all')"/><br/>
+      </td><td>
+      <input type="checkbox" id="gicing" name="Icing" value="Icing" checked="checked" onClick="changeGairmetType()"/>Icing<br/>
+      <input type="checkbox" id="gfrzlvl" name="FzLvl" value="FzLvl" checked="checked" onClick="changeGairmetType()"/>Freezing Level<br/>
+      <input type="checkbox" id="gifr" name="IFR" value="IFR" checked="checked" onClick="changeGairmetType()"/>Ceil&amp;Vis (IFR)<br/>
+      <input type="checkbox" id="gmtnobs" name="MtnObs" value="MtnObs" checked="checked" onClick="changeGairmetType()"/>Mtn Obscuration<br/>
+      <input type="button" id="gnone" name="AllOff" value="All Off" onClick="changeGairmetType('none')"/><br/>
+      </td>
+      </tr></table>
+    </li>
+    </ul>
+  </li>
+  <li id="app_link"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">Hazards &gt;&gt;</div>
+    <ul style="width: 250px">
+    <li id="app_link" style="width: 240px; padding: 5px 0 5px 4px">
+    Types: <select id="haztype" name="hazardtype" onChange="setHazardType(this.options[this.selectedIndex].value)">
+    <option value="all" selected="selected">All</option>
+    <option value="warn">Warnings</option>
+    </select></li>
+    </ul>
+  </li>
+  <li id="app_link"><div class="popout" style="margin: 0 0 0 22px; padding: 5px 0 2px 0">Cursor Position &gt;&gt;</div>
+    <ul style="width: 250px">
+    <li id="app_link" style="width: 240px; padding: 5px 0 5px 4px">
+    Location format: <select id="locformat" name="locformat" onChange="changeLocationFormat(this.options[this.selectedIndex].value)">
+    <option value="deg" selected="selected" >Degrees</option>
+    <option value="hms">Hours:Min:Sec</option>
+    </select></li>
+    </ul>
+  </li>
+  <li id="app_link"><input id="hover" type="checkbox" name="Hover" value="Hover" onClick="changeHover(this);"/>Hover</li>
+  <li id="app_link" style="margin: 0 0 0 22px; padding: 5px 0 2px 0; border-bottom: 0"><a href="" id="permalink"><b>Permalink</b></a>
+</ul>
+</li>
+<li id="app_link" aria-haspopup="true" onClick="" style="float: right; width: 360px; padding-right: 0"><div style="font-size: 14px; padding: 0 0 0 0; font-weight: bold"><span id="stime" style="text-align: right"></span></div>
+  <ul style="width: 480px; left: -120px">
+  <li id="app_link" style="width: 480px; padding: 5px 3px 5px 3px">
+    <div>
+    <div style="float: left; margin-top:3px">Display time:</div>
+    <input type="button" value="&lt;" style="float: left" onclick="incTime(-1)">
+    <div id="slider" style="width: 100px; height: 12px; margin: 5px 12px 0 10px; float: left"></div>
+    <input type="button" value="&gt;" style="float: left" onclick="incTime(1)">
+    <input type="button" value="Now" style="float: left" onclick="incTime(0)">
+    <span id="slidervalue" style="padding: 5px 0 0 5px"></span><br clear="both"/>
+    <div style="float: left; margin-top: -7px">Radar loop: <input type="button" id="loop" value="Pause" onclick="toggleLoop()">
+    <input type="button" value="&lt;" title="Step loop backward" onclick="stepLoop(-1)">
+    <input type="button" value="&gt;" title="Step loop forward" onclick="stepLoop(1)"></div>
+    <div style="float: left; margin: -3px 0 0 5px"> Time: </div><span id="rtime" style="float: left; margin: -3px 0 0 0"></span>
+    </div>
+  </li>
+  </ul>
+</li>
+</div>
+<div id="map" style="border: 2px solid black">
+<div style="position: absolute; right:2px;top:2px;z-index:10000"><img id="maximize" src="/images/maximize.gif" title="Click for full screen" onClick="toggleFullScreen()"/></div>
+<div id="navloc" style="position: absolute; right:2px;bottom:15px;z-index:10000">&nbsp;</div>
+<div id="mousepos" style="position: absolute; right:2px;bottom:2px;z-index:10000">&nbsp;</div>
+<div id="scale" style="position: absolute; left:80px;bottom:2px;z-index:10000">&nbsp;</div>
+<div id="label" style="font-size: 14px; font-weight: bold; position: absolute; left:175px;bottom:2px;z-index:10000">Flight Category</div>
+<div id="label2" style="font-size: 14px; font-weight: bold; position: absolute; left:450px;bottom:2px;z-index:10000">&nbsp;</div>
+<div id="noaalogo" style="position: absolute; left:0px;bottom:0px;z-index:10000"> <img src="/images/noaa_logo_plain.png" width="40"/></div></div>
+</div>
+<img src="/images/sigmet/SigmetLgndSm.png" style="border: solid 2px #ccc; margin-left: 140px"/>
+<img src="/images/cwa/CwaLgndSm.png" style="border: solid 2px #ccc"/>
+<img src="/images/gairmet/GairmetLgnd.png" height="32" style="border: solid 2px #ccc"/><br/>
+<img src="/images/metar/FltCat-Lgnd.png" style="border: solid 2px #ccc; margin-left:50px"/>
+<img src="/images/airep/Turb-Lgnd.png" style="border: solid 2px #ccc"/>
+<img src="/images/airep/Ice-Lgnd.png" style="border: solid 2px #ccc"/><br/>
+<div style="margin: 10px 0 0 100px">
+<img id="legend" src="/images/hemst/HEMS_FC_Lgnd.png"/>
+<br/>
+</div>
+</div> <!-- awc_main_content -->
+</div> <!-- awc_main -->
+
+</body>
+
+</html>

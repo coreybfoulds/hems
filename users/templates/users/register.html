@@ -1,0 +1,16 @@
+{% extends "hems_blog/base.html" %}
+{% load bootstrap3 %}
+
+{% block content %}
+<div class="container" style="margin-top: 30px; border-top-left-radius:10px;border-top-right-radius:10px;border-bottom-left-radius:10px;border-bottom-right-radius:10px; padding-top:30px; color:orangered; background-color:rgba(0,0,0, 0.6);" class="panel-default">
+<form method="post" action="{% url 'users:register' %}">
+	{% csrf_token %}
+
+	{% bootstrap_form form %}
+	{% buttons %}
+	<button name="submit"class="btn btn-primary">Register</button>
+	{% endbuttons %} 
+	<input type="hidden" name="next" value="{% url 'hems_blog:index' %}"/>
+</form>
+</div>
+{% endblock content %}

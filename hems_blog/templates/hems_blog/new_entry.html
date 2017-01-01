@@ -1,0 +1,58 @@
+{% extends "hems_blog/base.html" %}
+{% load bootstrap3 %}
+{% block header %}
+{% endblock header %}
+
+{% block content %}
+
+
+
+
+
+
+<div style="background-color:rgba(255,255,255, 0.5); max-width: 800px;" class="container">
+
+		<h2>comments</h2>
+		<a href="{% url 'hems_blog:topic' topic.id  %}"><p style="color:white; padding-left:4px; padding-right:4px;background-color:orangered;float:right;border-top-right-radius:5px;border-top-left-radius:5px;border-bottom-left-radius:5px;border-bottom-right-radius:5px;">Back to article</p></a>
+		<hr />
+	<div style="margin-top:20px;">
+{% for entry in entries %}
+
+<div style="padding-bottom:10px;" >
+	<div class="container" style="width: 100%; background-color:rgba(255,255,255, 0.7);padding:0px 5px 5px 10px; margin-bottom:5px;margin-top:5px">
+		<p style="font-size:15px;">
+				 <a style="color:orangered;font-size:20px;"><b>{{entry.owner}}</b></a>@{{ entry.date_added|date:'H:i, M d'}}
+		</p>
+		<p >
+			<a style="text-decoration:none; color:black;">{{entry.text|linebreaks}}</a>
+		</p>
+		{% if user == entry.owner %}
+		<a href="{% url 'hems_blog:edit_entry' entry.id %}">
+			edit comment
+		</a>
+
+		{% endif %}
+	</div>
+
+	{% empty %}
+
+	 Be the first to make a comment.
+	 {% endfor %}
+</div>
+
+<div >
+
+<h3 style="color:black">Add your comment:</h3>
+<form action="{% url 'hems_blog:new_entry' topic.id %}" method='post' class="form">
+
+
+	{% csrf_token %}
+	{% bootstrap_form form %}	
+	{% buttons %}
+	<button name='submit' class="btn btn-primary">add entry</button>
+	{% endbuttons %}
+</form>
+</div>
+</div>
+
+{% endblock content %}
